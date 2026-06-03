@@ -96,10 +96,12 @@ namespace OrderManagement.Infrastructure.Persistence.Seeding
                 for (int j = 0; j < itemCount; j++)
                 {
                     var product = productList[Random.Shared.Next(productList.Count)];
+                    var unitPrice = Money.Create(product.Price.Amount, product.Price.Currency);
+
                     order.AddItem(
                         productId: product.Id,
                         productName: product.Name,
-                        unitPrice: product.Price,
+                        unitPrice: unitPrice,
                         quantity: Random.Shared.Next(1, 5)
                     );
                 }

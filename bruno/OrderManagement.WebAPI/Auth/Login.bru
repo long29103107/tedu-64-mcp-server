@@ -1,0 +1,31 @@
+meta {
+  name: Login
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/Auth/login
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "admin@orderms.local",
+    "password": "Admin@123456"
+  }
+}
+
+script:post-response {
+  const response = res.getBody();
+  console.log(response);
+  
+  if (response.accessToken) {
+      bru.setEnvVar("accessToken", response.accessToken);
+  }
+}
