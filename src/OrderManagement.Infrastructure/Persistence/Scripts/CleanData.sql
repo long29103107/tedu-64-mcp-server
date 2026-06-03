@@ -1,0 +1,25 @@
+SET XACT_ABORT ON;
+BEGIN TRANSACTION;
+
+DELETE FROM [OrderItems]
+WHERE 1 = 1;
+
+DELETE FROM [Orders]
+WHERE 1 = 1;
+
+DELETE FROM [OutboxMessages]
+WHERE 1 = 1;
+
+DELETE FROM [Vouchers]
+WHERE 1 = 1;
+
+DELETE FROM [Products]
+WHERE 1 = 1;
+
+DELETE FROM [Customers]
+WHERE 1 = 1;
+
+DELETE FROM [Users]
+WHERE 1 = 1;
+
+COMMIT TRANSACTION;
