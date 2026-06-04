@@ -48,7 +48,7 @@ namespace OrderManagement.WebAPI.Controllers.V1
 
         // GET /api/orders/{id}
         [HttpGet("{id:guid}")]
-        [Authorize(Policy = "MustOwnOrder")]
+        //[Authorize(Policy = "MustOwnOrder")]
         public async Task<IActionResult> GetOrder(Guid id)
         {
             var query = new GetOrderByIdQuery(id);
