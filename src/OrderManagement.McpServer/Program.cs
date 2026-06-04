@@ -1,25 +1,40 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using OrderManagement.Application;
+using OrderManagement.Application.Common.Interfaces;
 using OrderManagement.Infrastructure;
+using OrderManagement.McpServer.Services;
 
-var builder = Host.CreateApplicationBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
-// Tắt console logger mặc định
-builder.Logging.ClearProviders();
+builder.Configuration
+    .SetBasePath(AppContext.BaseDirectory)
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
+    .AddEnvironmentVariables();
 
-// ✅ Tái sử dụng DI từ Web API - không viết lại
+
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration, builder.Environment);
+builder.Services.AddScoped<ICorrelationIdService, McpCorrelationIdService>();
 
-
-// ✅ Đăng ký MCP Server với stdio transport
 builder.Services
     .AddMcpServer()
-    .WithStdioServerTransport() // stdio: dùng console in/out
-    .WithToolsFromAssembly();   // scan tất cả [McpServerTool] trong assembly
-
+    //.WithStdioServerTransport()
+    .WithHttpTransport()
+    .WithToolsFromAssembly();
 
 var app = builder.Build();
-await app.RunAsync();
+
+app.MapMcp("/mcp");
+
+try
+{
+    await app.RunAsync();
+}
+catch (Exception e)
+{
+    Console.WriteLine(e);
+    throw;
+}
