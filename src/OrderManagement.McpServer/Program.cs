@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OrderManagement.Application;
 using OrderManagement.Application.Common.Interfaces;
+using OrderManagement.Application.Contracts;
 using OrderManagement.Infrastructure;
 using OrderManagement.McpServer.Services;
 
@@ -18,6 +19,8 @@ builder.Configuration
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration, builder.Environment);
 builder.Services.AddScoped<ICorrelationIdService, McpCorrelationIdService>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 builder.Services
     .AddMcpServer()
