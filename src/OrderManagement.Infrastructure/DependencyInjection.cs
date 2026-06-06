@@ -81,18 +81,7 @@ namespace OrderManagement.Infrastructure
             // Register IDbConnectionFactory
             services.AddScoped<IDbConnectionFactory, SqlConnectionFactory>();
 
-            // Đăng ký seeders
-            services.AddScoped<IDataSeeder, RoleSeedDataSeeder>();
-            services.AddScoped<IDataSeeder, AdminUserSeeder>();
-
-            // Development seeder chỉ đăng ký khi chạy dev environment
-            if (env.IsDevelopment())
-            {
-                services.AddScoped<IDataSeeder, DevelopmentCustomerSeeder>();
-                services.AddScoped<IDataSeeder, DevelopmentOrderSeeder>();
-            }
-
-
+            services.AddScoped<DatabaseSeeder>();
 
             return services;
         }
@@ -141,9 +130,7 @@ namespace OrderManagement.Infrastructure
 
             services.AddHttpClient("ExternalServices")
                 .AddPolicyHandler(policyWrap);
-
-
-
+            
             return services;
         }
 

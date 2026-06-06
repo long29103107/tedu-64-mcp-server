@@ -122,10 +122,10 @@ try
     // Nếu đặt sau, các middleware trước nó có thể throw exception mà không bị catch
     app.UseGlobalExceptionHandling();
 
-    if (app.Environment.IsDevelopment())
-    {
+    // if (app.Environment.IsDevelopment())
+    // {
         await app.InitialiseDatabaseAsync();
-    }
+    //}
 
     app.MapOpenApi();
     // Gọi migration và seeding trước khi app lắng nghe request

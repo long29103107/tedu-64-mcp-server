@@ -63,7 +63,6 @@ public class OrderPrompts
                     Text = $"""
                         {langInstruction}
 
-
                         Thực hiện theo thứ tự:
                         1. Gọi tool get_order với orderId = "{orderId}" để lấy chi tiết
                         2. Soạn email xác nhận bao gồm:

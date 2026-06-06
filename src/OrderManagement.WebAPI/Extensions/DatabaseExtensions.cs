@@ -22,17 +22,9 @@ namespace OrderManagement.WebAPI.Extensions
                     logger.LogInformation("Database migrated successfully");
                 }
 
-                // Chạy seeders theo thứ tự Order
-                var seeders = scope.ServiceProvider
-                    .GetServices<IDataSeeder>()
-                    .OrderBy(s => s.Order);
-
-                foreach (var seeder in seeders)
-                {
-                    await seeder.SeedAsync();
-                    logger.LogInformation("Seeder {SeederName} completed",
-                        seeder.GetType().Name);
-                }
+                var seeder = scope.ServiceProvider.GetRequiredService<DatabaseSeeder>();
+                await seeder.SeedAsync();
+                logger.LogInformation("Database seeding completed");
             }
             catch (Exception ex)
             {
