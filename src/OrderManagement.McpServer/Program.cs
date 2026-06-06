@@ -6,7 +6,7 @@ using OrderManagement.Application;
 using OrderManagement.Application.Common.Interfaces;
 using OrderManagement.Application.Contracts;
 using OrderManagement.Infrastructure;
-using OrderManagement.McpServer.Resources;
+using OrderManagement.McpServer.Middlewares;
 using OrderManagement.McpServer.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,8 +22,9 @@ builder.Configuration
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration, builder.Environment);
 
-builder.Services.AddScoped<ICorrelationIdService, McpCorrelationIdService>();
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddScoped<ICorrelationIdService, McpCorrelationIdService>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 builder.Services
@@ -35,15 +36,7 @@ builder.Services
     .WithToolsFromAssembly();
 
 var app = builder.Build();
-
+app.UseMiddleware<McpErrorHandlingMiddleware>();
 app.MapMcp("/mcp");
 
-try
-{
-    await app.RunAsync();
-}
-catch (Exception e)
-{
-    Console.WriteLine(e);
-    throw;
-}
+await app.RunAsync();
