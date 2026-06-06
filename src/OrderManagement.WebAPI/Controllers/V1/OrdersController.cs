@@ -26,7 +26,7 @@ namespace OrderManagement.WebAPI.Controllers.V1
                 Province = request.ShippingAddress.Province,
                 Country = request.ShippingAddress.Country,
                 PostalCode = request.ShippingAddress.PostalCode
-            };
+            };  
             var command = new PlaceOrderCommand
             {
                 CustomerId = request.CustomerId,
