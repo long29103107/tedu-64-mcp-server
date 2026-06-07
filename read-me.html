@@ -1,0 +1,973 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Order Management System README</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f0f4f8;
+        --paper: #ffffff;
+        --text: #1f2937;
+        --muted: #5b6472;
+        --border: #d8dee8;
+        --accent: #0f766e;
+        --accent-light: #d1fae5;
+        --code: #0f172a;
+        --code-bg: #eef2f7;
+        --shadow-sm:
+          0 1px 3px rgba(0, 0, 0, 0.07), 0 1px 2px rgba(0, 0, 0, 0.05);
+        --shadow-md:
+          0 4px 12px rgba(0, 0, 0, 0.09), 0 2px 4px rgba(0, 0, 0, 0.06);
+        --shadow-lg:
+          0 8px 28px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
+        --radius: 10px;
+        --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* ── reset ── */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      /* ── progress bar ── */
+      #progress-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        width: 0%;
+        background: linear-gradient(90deg, var(--accent), #14b8a6);
+        z-index: 999;
+        transition: width 0.1s linear;
+        border-radius: 0 3px 3px 0;
+      }
+
+      /* ── page fade-in ── */
+      @keyframes pageFadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Segoe UI", system-ui, Arial, sans-serif;
+        line-height: 1.7;
+        animation: pageFadeIn 0.5s ease both;
+      }
+
+      /* ── main card ── */
+      main {
+        max-width: 1080px;
+        margin: 32px auto;
+        padding: 48px 52px 72px;
+        background: var(--paper);
+        border-radius: 16px;
+        box-shadow: var(--shadow-lg);
+      }
+
+      /* ── headings ── */
+      h1,
+      h2,
+      h3 {
+        line-height: 1.25;
+        color: #111827;
+      }
+
+      h1 {
+        margin-top: 0;
+        font-size: 2.5rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        padding-bottom: 20px;
+        border-bottom: 2px solid var(--border);
+        background: linear-gradient(135deg, #111827 0%, var(--accent) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      h2 {
+        margin-top: 52px;
+        padding-bottom: 10px;
+        font-size: 1.35rem;
+        font-weight: 700;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      h2::before {
+        content: "";
+        display: inline-block;
+        width: 4px;
+        height: 1.2em;
+        background: linear-gradient(180deg, var(--accent), #14b8a6);
+        border-radius: 2px;
+        flex-shrink: 0;
+      }
+
+      /* ── links ── */
+      a {
+        color: var(--accent);
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition:
+          border-color var(--transition),
+          opacity var(--transition);
+      }
+      a:hover {
+        border-bottom-color: var(--accent);
+        opacity: 0.8;
+      }
+
+      /* ── inline code ── */
+      code {
+        background: var(--code-bg);
+        padding: 0.13rem 0.32rem;
+        border-radius: 5px;
+        font-family: "Cascadia Code", Consolas, monospace;
+        font-size: 0.9em;
+        border: 1px solid var(--border);
+        transition: background var(--transition);
+      }
+      code:hover {
+        background: #dde6f0;
+      }
+
+      /* ── code blocks ── */
+      pre {
+        position: relative;
+        overflow-x: auto;
+        background: var(--code);
+        color: #e2e8f0;
+        border-radius: var(--radius);
+        padding: 20px 20px 20px 20px;
+        margin: 20px 0;
+        box-shadow: var(--shadow-md);
+        border: 1px solid #1e293b;
+        transition:
+          box-shadow var(--transition),
+          transform var(--transition);
+      }
+      pre:hover {
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-1px);
+      }
+      pre code {
+        background: transparent;
+        color: inherit;
+        padding: 0;
+        border: none;
+        font-size: 0.88rem;
+        line-height: 1.65;
+      }
+
+      /* copy button */
+      pre .copy-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(255, 255, 255, 0.08);
+        color: #94a3b8;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 6px;
+        padding: 3px 10px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        transition:
+          background var(--transition),
+          color var(--transition),
+          transform 0.1s;
+        user-select: none;
+      }
+      pre .copy-btn:hover {
+        background: rgba(255, 255, 255, 0.16);
+        color: #e2e8f0;
+      }
+      pre .copy-btn:active {
+        transform: scale(0.93);
+      }
+
+      /* ── tables ── */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 0.95rem;
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+      }
+      th,
+      td {
+        border: 1px solid var(--border);
+        padding: 11px 14px;
+        text-align: left;
+        vertical-align: top;
+        transition: background var(--transition);
+      }
+      th {
+        background: linear-gradient(135deg, #eef2f7, #e4eaf3);
+        font-weight: 600;
+        font-size: 0.88rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #374151;
+      }
+      tbody tr {
+        transition: background var(--transition);
+      }
+      tbody tr:hover td {
+        background: #f5f8ff;
+      }
+      tbody tr:nth-child(even) td {
+        background: #fafbfc;
+      }
+      tbody tr:nth-child(even):hover td {
+        background: #f0f5ff;
+      }
+
+      /* ── lists ── */
+      ul {
+        padding-left: 1.4em;
+      }
+      li {
+        margin: 6px 0;
+        padding-left: 4px;
+      }
+      li::marker {
+        color: var(--accent);
+      }
+
+      /* ── lead paragraph ── */
+      .lead {
+        font-size: 1.1rem;
+        color: var(--muted);
+        line-height: 1.75;
+        border-left: 3px solid var(--accent-light);
+        padding-left: 16px;
+        margin-bottom: 24px;
+      }
+
+      /* ── scroll-reveal ── */
+      .reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition:
+          opacity 0.55s ease,
+          transform 0.55s ease;
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ── back-to-top ── */
+      #back-top {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        width: 42px;
+        height: 42px;
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow-md);
+        opacity: 0;
+        transform: translateY(12px);
+        transition:
+          opacity var(--transition),
+          transform var(--transition),
+          background var(--transition);
+        z-index: 900;
+      }
+      #back-top.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      #back-top:hover {
+        background: #0a6060;
+      }
+
+      /* ── responsive ── */
+      @media (max-width: 700px) {
+        main {
+          margin: 0;
+          border-radius: 0;
+          padding: 24px 16px 52px;
+          box-shadow: none;
+        }
+        h1 {
+          font-size: 1.9rem;
+        }
+        table {
+          display: block;
+          overflow-x: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="progress-bar"></div>
+    <button id="back-top" title="Back to top" aria-label="Back to top">
+      ↑
+    </button>
+    <main>
+      <h1>Order Management System</h1>
+      <p class="lead">
+        Order Management System is a .NET 10 clean-architecture solution for
+        managing customers, products, orders, authentication, and AI-facing
+        order operations through both a REST API and a Model Context Protocol
+        (MCP) server.
+      </p>
+      <p>
+        The repository contains the domain model, application use cases, SQL
+        Server persistence, Web API endpoints, MCP tools/resources/prompts,
+        Bruno API requests, EF Core migrations, database utility scripts, and
+        unit/integration tests.
+      </p>
+
+      <h2>Overview</h2>
+      <p>
+        The system centers on order placement and lookup. It models customers,
+        products, vouchers, users, orders, order items, shipping addresses,
+        money, order status transitions, domain events, and an outbox table. The
+        Web API exposes HTTP endpoints for authentication and order operations.
+        The MCP server reuses the same application and infrastructure layers to
+        expose order tools, resources, and prompts to MCP clients.
+      </p>
+      <ul>
+        <li>
+          <code>OrderManagement.WebAPI</code> starts a REST API, maps OpenAPI
+          and Scalar docs, initializes the database, applies migrations in
+          Development, and seeds data when the database is empty.
+        </li>
+        <li>
+          <code>OrderManagement.McpServer</code> starts an MCP server with HTTP
+          transport at <code>/mcp</code> and stdio transport for desktop/client
+          integration.
+        </li>
+        <li>
+          <code>OrderManagement.Infrastructure</code> wires SQL Server, ASP.NET
+          Core Identity, repositories, SendGrid, Stripe, Redis/in-memory cache,
+          external-service resilience policies, and EF Core migrations.
+        </li>
+      </ul>
+
+      <h2>Features</h2>
+      <ul>
+        <li>
+          Clean Architecture project layout: Domain, Application,
+          Infrastructure, WebAPI, and MCP Server.
+        </li>
+        <li>
+          CQRS-style application flow with MediatR commands, queries,
+          validators, and pipeline behaviors.
+        </li>
+        <li>Order placement and order lookup through REST and MCP tools.</li>
+        <li>Paginated order retrieval through MCP.</li>
+        <li>ASP.NET Core Identity with seeded local admin account.</li>
+        <li>JWT bearer authentication and authorization policy scaffolding.</li>
+        <li>
+          EF Core SQL Server persistence with migrations and design-time
+          DbContext factory.
+        </li>
+        <li>
+          Domain entities, value objects, specifications, repositories, domain
+          events, and outbox messages.
+        </li>
+        <li>
+          Database seeding for roles, admin user, customers, products, and draft
+          orders.
+        </li>
+        <li>Serilog logging to console, rolling files, and Seq.</li>
+        <li>
+          Redis cache support with development-time in-memory cache option.
+        </li>
+        <li>
+          External integrations for SendGrid email, Stripe payments, Azure Blob
+          file storage abstraction, and inventory service abstraction.
+        </li>
+        <li>Bruno collection for local API requests.</li>
+        <li>
+          xUnit unit and integration tests with FluentAssertions, NSubstitute,
+          Respawn, SQLite, and SQL Server Testcontainers.
+        </li>
+      </ul>
+
+      <h2>Architecture Overview</h2>
+      <pre><code>HTTP clients / Bruno / Scalar
+        |
+        v
+OrderManagement.WebAPI
+  - Controllers
+  - Middleware
+  - Authentication and authorization
+  - API versioning
+        |
+        v
+OrderManagement.Application
+  - MediatR commands and queries
+  - DTOs and mapping extensions
+  - Validators
+  - Pipeline behaviors
+        |
+        v
+OrderManagement.Domain
+  - Entities and value objects
+  - Domain services
+  - Domain events
+  - Specifications
+        |
+        v
+OrderManagement.Infrastructure
+  - EF Core DbContext and migrations
+  - Repositories and Unit of Work
+  - Identity, JWT, cache, email, payment, file storage
+
+MCP clients
+        |
+        v
+OrderManagement.McpServer
+  - MCP tools, resources, prompts, and middleware
+  - Reuses Application and Infrastructure services</code></pre>
+      <table>
+        <tr>
+          <th>Area</th>
+          <th>Implementation</th>
+        </tr>
+        <tr>
+          <td>Request/use-case dispatch</td>
+          <td>
+            MediatR handlers in <code>src/OrderManagement.Application</code>
+          </td>
+        </tr>
+        <tr>
+          <td>Validation</td>
+          <td>FluentValidation plus <code>ValidationBehavior</code></td>
+        </tr>
+        <tr>
+          <td>Logging/performance</td>
+          <td>
+            <code>LoggingBehavior</code> and <code>PerformanceBehavior</code>
+          </td>
+        </tr>
+        <tr>
+          <td>Transactions</td>
+          <td>
+            <code>TransactionBehavior</code> for commands implementing
+            <code>ITransactionalCommand</code>
+          </td>
+        </tr>
+        <tr>
+          <td>Persistence</td>
+          <td>EF Core <code>ApplicationDbContext</code> and repositories</td>
+        </tr>
+        <tr>
+          <td>API error responses</td>
+          <td>
+            Global exception middleware and result-to-ProblemDetails extensions
+          </td>
+        </tr>
+        <tr>
+          <td>MCP error responses</td>
+          <td><code>McpErrorHandlingMiddleware</code></td>
+        </tr>
+      </table>
+
+      <h2>Tech Stack</h2>
+      <table>
+        <tr>
+          <th>Category</th>
+          <th>Technology</th>
+        </tr>
+        <tr>
+          <td>Runtime</td>
+          <td>.NET 10 (<code>net10.0</code>)</td>
+        </tr>
+        <tr>
+          <td>Web API</td>
+          <td>ASP.NET Core, Controllers, OpenAPI, Scalar</td>
+        </tr>
+        <tr>
+          <td>API versioning</td>
+          <td>
+            <code>Asp.Versioning.Mvc</code>,
+            <code>Asp.Versioning.Mvc.ApiExplorer</code>
+          </td>
+        </tr>
+        <tr>
+          <td>Application layer</td>
+          <td>MediatR, FluentValidation, Dapper</td>
+        </tr>
+        <tr>
+          <td>Persistence</td>
+          <td>
+            Entity Framework Core 10, SQL Server, Microsoft.Data.SqlClient
+          </td>
+        </tr>
+        <tr>
+          <td>Identity/Auth</td>
+          <td>ASP.NET Core Identity, JWT Bearer</td>
+        </tr>
+        <tr>
+          <td>Logging</td>
+          <td>Serilog, console/file/Seq sinks</td>
+        </tr>
+        <tr>
+          <td>Caching</td>
+          <td>In-memory cache or Redis via StackExchange.Redis</td>
+        </tr>
+        <tr>
+          <td>External integrations</td>
+          <td>
+            SendGrid, Stripe, Azure Blob storage abstraction, Polly HTTP
+            resilience
+          </td>
+        </tr>
+        <tr>
+          <td>MCP</td>
+          <td>ModelContextProtocol 1.3.0, HTTP transport, stdio transport</td>
+        </tr>
+        <tr>
+          <td>Testing</td>
+          <td>
+            xUnit, FluentAssertions, NSubstitute, ASP.NET Core MVC Testing,
+            Respawn, SQLite, Testcontainers.MsSql, coverlet
+          </td>
+        </tr>
+        <tr>
+          <td>API client collection</td>
+          <td>Bruno</td>
+        </tr>
+      </table>
+
+      <h2>Project Structure</h2>
+      <pre><code>.
+|-- OrderManagement.slnx
+|-- OrderManagementDb.bak
+|-- README.md
+|-- read-me.html
+|-- bruno/
+|   `-- OrderManagement.WebAPI/
+|       |-- Auth/
+|       |-- Docs/
+|       |-- Orders/V1/
+|       `-- environments/Local.bru
+|-- docs/
+|   |-- AddDefaultTokenProviders-Guide.md
+|   `-- DTO-Mapping-Pattern.md
+|-- src/
+|   |-- OrderManagement.Domain/
+|   |-- OrderManagement.Application/
+|   |-- OrderManagement.Infrastructure/
+|   |-- OrderManagement.WebAPI/
+|   `-- OrderManagement.McpServer/
+`-- tests/
+    `-- OrderManagement.Tests/
+        |-- Integration/
+        `-- Unit/</code></pre>
+      <p>
+        Generated folders such as <code>bin/</code>, <code>obj/</code>, and
+        <code>artifacts/</code> are present in the working tree but are not part
+        of the source layout above.
+      </p>
+
+      <h2>Prerequisites</h2>
+      <ul>
+        <li>.NET 10 SDK.</li>
+        <li>SQL Server reachable by the configured connection string.</li>
+        <li>EF Core CLI tools for migration commands.</li>
+        <li>
+          Optional: Redis on <code>localhost:6379</code> when
+          <code>Cache:UseInMemory</code> is <code>false</code>.
+        </li>
+        <li>Optional: Seq on <code>http://localhost:5341</code>.</li>
+        <li>Optional: Bruno for the checked-in API collection.</li>
+        <li>
+          Optional: Docker for tests that use <code>Testcontainers.MsSql</code>;
+          Docker application deployment files are not detected from repository
+          analysis.
+        </li>
+      </ul>
+      <pre><code>dotnet tool install --global dotnet-ef</code></pre>
+
+      <h2>Installation</h2>
+      <pre><code>dotnet restore .\OrderManagement.slnx
+dotnet build .\OrderManagement.slnx
+dotnet test .\OrderManagement.slnx</code></pre>
+
+      <h2>Configuration</h2>
+      <table>
+        <tr>
+          <th>File</th>
+          <th>Purpose</th>
+        </tr>
+        <tr>
+          <td><code>src/OrderManagement.WebAPI/appsettings.json</code></td>
+          <td>
+            Shared API settings for Serilog, SendGrid, Stripe, cache, JWT, and
+            hosts
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code>src/OrderManagement.WebAPI/appsettings.Development.json</code>
+          </td>
+          <td>
+            Development SQL Server connection string and in-memory cache
+            override
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code
+              >src/OrderManagement.WebAPI/Properties/launchSettings.json</code
+            >
+          </td>
+          <td>Local API ports and Development environment</td>
+        </tr>
+        <tr>
+          <td><code>src/OrderManagement.McpServer/appsettings.json</code></td>
+          <td>MCP server settings copied to output</td>
+        </tr>
+        <tr>
+          <td>
+            <code
+              >src/OrderManagement.McpServer/appsettings.Development.json</code
+            >
+          </td>
+          <td>
+            MCP development SQL Server connection string and cache override
+          </td>
+        </tr>
+        <tr>
+          <td><code>.vscode/mcp.json</code></td>
+          <td>
+            VS Code MCP client entry pointing to
+            <code>http://localhost:5000/mcp</code>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code>bruno/OrderManagement.WebAPI/environments/Local.bru</code>
+          </td>
+          <td>Bruno local API variables</td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+          <th>Profile</th>
+          <th>URL</th>
+        </tr>
+        <tr>
+          <td>HTTP</td>
+          <td><code>http://localhost:5086</code></td>
+        </tr>
+        <tr>
+          <td>HTTPS</td>
+          <td><code>https://localhost:7086;http://localhost:5086</code></td>
+        </tr>
+        <tr>
+          <td>Scalar docs</td>
+          <td><code>http://localhost:5086/scalar/v1</code></td>
+        </tr>
+        <tr>
+          <td>OpenAPI JSON</td>
+          <td><code>http://localhost:5086/openapi/v1.json</code></td>
+        </tr>
+      </table>
+      <h2>Database Setup</h2>
+      <p>
+        The repository uses SQL Server through EF Core. The Web API applies
+        pending migrations in Development and runs
+        <code>DatabaseSeeder</code> at startup. The seeder creates roles, an
+        admin user, sample customers, sample products, and sample draft orders
+        when the database is empty.
+      </p>
+      <p>
+        Admin user: <code>admin@orderms.local</code> / <code>Admin@123456</code>
+      </p>
+      <p>
+        Detected migrations: <code>20260420055454_InitialCreate</code>,
+        <code>20260420222804_AddDefaultValueToCustomerRowVersion</code>,
+        <code>20260421055602_AddIdentityTables</code>.
+      </p>
+      <p>
+        Detected scripts: <code>CleanData.sql</code>,
+        <code>migration_20042026.sql</code>, <code>VerifySeeding.sql</code>. The
+        repository also contains <code>OrderManagementDb.bak</code>; restore
+        instructions are not detected from repository analysis.
+      </p>
+      <pre><code>dotnet ef migrations add &lt;MigrationName&gt; `
+  --project .\src\OrderManagement.Infrastructure `
+  --startup-project .\src\OrderManagement.WebAPI `
+  --output-dir Persistence\Migrations
+
+dotnet ef database update `
+  --project .\src\OrderManagement.Infrastructure `
+  --startup-project .\src\OrderManagement.WebAPI</code></pre>
+
+      <h2>Running Locally</h2>
+      <pre><code>dotnet run --project .\src\OrderManagement.WebAPI</code></pre>
+      <ul>
+        <li>
+          Scalar API reference: <code>http://localhost:5086/scalar/v1</code>
+        </li>
+        <li>
+          OpenAPI JSON: <code>http://localhost:5086/openapi/v1.json</code>
+        </li>
+        <li>API base URL for Bruno: <code>http://localhost:5086</code></li>
+      </ul>
+      <pre><code>dotnet run --project .\src\OrderManagement.McpServer</code></pre>
+      <ul>
+        <li>HTTP MCP endpoint: <code>/mcp</code></li>
+        <li>
+          Order resources: <code>oms://orders/{orderId}</code>,
+          <code>oms://orders/list</code>
+        </li>
+        <li>System resource: <code>oms://system/info</code></li>
+        <li>
+          Tools: <code>get_order</code>, <code>get_orders</code>,
+          <code>place_order</code>
+        </li>
+        <li>
+          Prompts: <code>summarize_draft_orders</code>,
+          <code>draft_order_confirmation</code>
+        </li>
+      </ul>
+      <pre><code>dotnet build .\src\OrderManagement.McpServer\OrderManagement.McpServer.csproj</code></pre>
+
+      <h2>Running with Docker</h2>
+      <p>
+        Docker application files are not detected from repository analysis. No
+        <code>Dockerfile</code>, <code>docker-compose.yml</code>, or CI
+        container build definition was found. Tests reference
+        <code>Testcontainers.MsSql</code>, so Docker may be required when
+        running integration tests that start SQL Server containers.
+      </p>
+
+      <h2>API Documentation</h2>
+      <table>
+        <tr>
+          <th>Method</th>
+          <th>Route</th>
+          <th>Purpose</th>
+          <th>Auth in code</th>
+        </tr>
+        <tr>
+          <td><code>POST</code></td>
+          <td><code>/api/Auth/register</code></td>
+          <td>Register a user</td>
+          <td>None detected</td>
+        </tr>
+        <tr>
+          <td><code>POST</code></td>
+          <td><code>/api/Auth/login</code></td>
+          <td>Login and receive token data</td>
+          <td>None detected</td>
+        </tr>
+        <tr>
+          <td><code>POST</code></td>
+          <td><code>/api/v1/orders</code></td>
+          <td>Place an order</td>
+          <td><code>[Authorize]</code> is currently commented out</td>
+        </tr>
+        <tr>
+          <td><code>GET</code></td>
+          <td><code>/api/v1/orders/{id}</code></td>
+          <td>Get an order by GUID</td>
+          <td>
+            <code>[Authorize]</code> and <code>MustOwnOrder</code> are currently
+            commented out
+          </td>
+        </tr>
+      </table>
+      <p>
+        Bruno requests are available under
+        <code>bruno/OrderManagement.WebAPI</code>. Local variables include
+        <code>baseUrl=http://localhost:5086</code> and seeded login credentials
+        <code>admin@orderms.local</code> / <code>Admin@123456</code>.
+      </p>
+
+      <h2>Testing</h2>
+      <pre><code>dotnet test .\tests\OrderManagement.Tests\OrderManagement.Tests.csproj
+dotnet test .\OrderManagement.slnx</code></pre>
+      <p>
+        Test coverage includes domain, application, infrastructure, Web API
+        middleware, and integration scenarios.
+      </p>
+
+      <h2>CI/CD</h2>
+      <p>
+        Not detected from repository analysis. No
+        <code>.github/workflows</code>, Azure Pipelines, GitLab CI, TeamCity,
+        Jenkins, or other CI/CD configuration files were found in the repository
+        scan.
+      </p>
+      <pre><code>dotnet restore .\OrderManagement.slnx
+dotnet build .\OrderManagement.slnx --configuration Release --no-restore
+dotnet test .\OrderManagement.slnx --configuration Release --no-build</code></pre>
+
+      <h2>Deployment</h2>
+      <p>
+        Application deployment scripts are not detected from repository
+        analysis. Production configuration should provide real values for
+        connection string, JWT, SendGrid, Stripe, cache, and hosting URL
+        settings.
+      </p>
+      <pre><code>dotnet ef migrations script --idempotent `
+  --output .\src\OrderManagement.Infrastructure\Persistence\Scripts\migration_$(Get-Date -Format 'yyyyMMdd').sql `
+  --project .\src\OrderManagement.Infrastructure `
+  --startup-project .\src\OrderManagement.WebAPI</code></pre>
+
+      <h2>Development Guidelines</h2>
+      <ul>
+        <li>
+          Keep domain rules in <code>OrderManagement.Domain</code>; do not move
+          persistence or HTTP concerns into entities/value objects.
+        </li>
+        <li>
+          Put use cases in <code>OrderManagement.Application</code> as MediatR
+          commands/queries with validators when input validation is needed.
+        </li>
+        <li>
+          Use mapping extensions in <code>Orders/Mappings</code> for DTO
+          conversion patterns already present in the application layer.
+        </li>
+        <li>
+          Keep infrastructure implementations behind application/domain
+          interfaces.
+        </li>
+        <li>
+          Add EF Core entity configuration under
+          <code>OrderManagement.Infrastructure/Persistence/Configurations</code
+          >.
+        </li>
+        <li>
+          Add migrations from the Infrastructure project with WebAPI as the
+          startup project.
+        </li>
+        <li>
+          Prefer user secrets or environment variables for SendGrid, Stripe,
+          JWT, and connection string overrides.
+        </li>
+        <li>
+          Keep MCP tools/resources/prompts in
+          <code>OrderManagement.McpServer</code> while reusing application
+          handlers instead of duplicating business logic.
+        </li>
+        <li>
+          Use the checked-in Bruno collection when validating API routes
+          manually.
+        </li>
+      </ul>
+
+      <h2>Roadmap</h2>
+      <p>Not detected from repository analysis.</p>
+      <ul>
+        <li>Enable and enforce authorization on order endpoints.</li>
+        <li>Implement or expose order cancellation/update routes.</li>
+        <li>
+          Add password reset/email confirmation token providers if required by
+          product scope.
+        </li>
+        <li>Add CI/CD workflow configuration.</li>
+        <li>
+          Add Docker application packaging if containerized deployment is
+          desired.
+        </li>
+        <li>Document restore/use of <code>OrderManagementDb.bak</code>.</li>
+      </ul>
+
+      <h2>License</h2>
+      <p>
+        Not detected from repository analysis. No <code>LICENSE</code> file or
+        license metadata was found.
+      </p>
+    </main>
+
+    <script>
+      /* ── scroll progress bar ── */
+      const bar = document.getElementById("progress-bar");
+      function updateProgress() {
+        const scrolled = window.scrollY;
+        const total =
+          document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.width = (total > 0 ? (scrolled / total) * 100 : 0) + "%";
+      }
+
+      /* ── back-to-top button ── */
+      const backTop = document.getElementById("back-top");
+      function updateBackTop() {
+        backTop.classList.toggle("show", window.scrollY > 320);
+      }
+      backTop.addEventListener("click", () =>
+        window.scrollTo({ top: 0, behavior: "smooth" }),
+      );
+
+      window.addEventListener(
+        "scroll",
+        () => {
+          updateProgress();
+          updateBackTop();
+        },
+        { passive: true },
+      );
+
+      /* ── scroll-reveal via IntersectionObserver ── */
+      const revealEls = document.querySelectorAll(
+        "h2, p, ul, pre, table, .lead",
+      );
+      revealEls.forEach((el) => el.classList.add("reveal"));
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("visible");
+              observer.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.08, rootMargin: "0px 0px -40px 0px" },
+      );
+
+      revealEls.forEach((el) => observer.observe(el));
+
+      /* ── copy buttons on pre blocks ── */
+      document.querySelectorAll("pre").forEach((pre) => {
+        const btn = document.createElement("button");
+        btn.className = "copy-btn";
+        btn.textContent = "Copy";
+        btn.addEventListener("click", () => {
+          navigator.clipboard
+            .writeText(pre.querySelector("code")?.innerText ?? pre.innerText)
+            .then(() => {
+              btn.textContent = "Copied!";
+              setTimeout(() => (btn.textContent = "Copy"), 1800);
+            });
+        });
+        pre.appendChild(btn);
+      });
+    </script>
+  </body>
+</html>
